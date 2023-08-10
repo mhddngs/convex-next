@@ -13,35 +13,26 @@ export default function MessageList({ messages, author }) {
       {messages?.map((message) => {
         const isSelf = message.author.toLowerCase() === author.toLowerCase();
         return (
-          <div
-            key={message._id}
-            className={`flex flex-col ${
-              isSelf ? "mr-4 self-end" : "ml-4 self-start"
-            }`}
-          >
-            <div className={isSelf ? classes.self : classes.opponent}>
-              {message.body}
-            </div>
-            <small
-              className={`text-gray-500 ${isSelf ? "text-right" : "text-left"}`}
+          <div key={message._id} className="mt-auto flex flex-col">
+            <div
+              className={`flex flex-col ${
+                isSelf ? "mr-4 self-end" : "ml-4 self-start"
+              }`}
             >
-              {message.author || "Anon"}
-            </small>
+              <div className={isSelf ? classes.self : classes.opponent}>
+                {message.body}
+              </div>
+              <small
+                className={`text-gray-500 ${
+                  isSelf ? "text-right" : "text-left"
+                }`}
+              >
+                {message.author || "Anon"}
+              </small>
+            </div>
           </div>
         );
       })}
     </>
   );
-}
-
-{
-  /* // <div
-        //   className={`${
-        //     message.author === author ? classes.self : classes.opponent
-        //   } flex-console.log('first', first) flex`}
-        //   key={message._id}
-        // >
-        //   <small>{message.author}</small>
-        //   {message.body}
-        // </div> */
 }
