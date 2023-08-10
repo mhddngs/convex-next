@@ -15,6 +15,7 @@ import * as Popover from "@radix-ui/react-popover";
 
 export default function Home() {
   const messages = useQuery(api.messages.get);
+
   const sendMessage = useMutation(api.messages.create);
 
   const [input, setInput] = useState("");
@@ -22,16 +23,18 @@ export default function Home() {
   const [editingMode, setEditngMode] = useState(false);
   const notEmpty = input.length > 0;
 
-  const convoRef = useRef(null);
+  const convoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    convoRef.current.scrollTop = convoRef.current.scrollHeight;
+    if (convoRef.current) {
+      convoRef.current.scrollTop = convoRef.current.scrollHeight;
+    }
   }, [messages]);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setInput(e.target.value);
   }
-  function handleAuthorChange(e) {
+  function handleAuthorChange(e: ChangeEvent<HTMLInputElement>) {
     setAuthor(e.target.value);
   }
 
@@ -45,11 +48,36 @@ export default function Home() {
   }
 
   return (
-    <main className="flex max-h-screen min-h-screen flex-col justify-start p-6">
+    <main className="flex max-h-[100svh] min-h-[100svh] flex-col justify-start p-6">
       <div className="relative flex max-h-full grow flex-col overflow-hidden rounded-lg bg-gray-50 shadow-md">
-        <h1 className="w-full self-center bg-gray-100 py-4 text-center font-semibold">
-          Messages
-        </h1>
+        <div className="w-full self-center bg-gray-100 py-4 text-center font-semibold">
+          <h1 className="">🍕 Social</h1>
+          <small className="items-start self-start px-6 text-gray-500">
+            {author.length > 0 ? `Chatting as ${author} ` : null}
+            <Popover.Root onOpenChange={() => setEditngMode(!editingMode)}>
+              <Popover.Trigger>
+                <a className="font-medium text-blue-500">
+                  {author.length > 0
+                    ? editingMode
+                      ? "Save"
+                      : "Change alias"
+                    : "Set an alias to start chatting"}
+                </a>
+              </Popover.Trigger>
+              <Popover.Portal>
+                <Popover.Content className="rounded-full bg-white p-4 shadow-lg ring-1 ring-gray-100">
+                  <input
+                    value={author}
+                    onChange={handleAuthorChange}
+                    className="outline-none"
+                  ></input>
+                  <Popover.Close />
+                  <Popover.Arrow className="fill-white" />
+                </Popover.Content>
+              </Popover.Portal>
+            </Popover.Root>
+          </small>
+        </div>
         {/* Conversation Container */}
         <div
           ref={convoRef}
@@ -85,31 +113,6 @@ export default function Home() {
               </form>
             </div>
           </div>
-          <small className="items-start self-start px-6 text-gray-500">
-            {author.length > 0 ? `Chatting as ${author} ` : null}
-            <Popover.Root onOpenChange={() => setEditngMode(!editingMode)}>
-              <Popover.Trigger>
-                <a className="font-medium text-blue-500">
-                  {author.length > 0
-                    ? editingMode
-                      ? "Save"
-                      : "Change alias"
-                    : "Set an alias to start chatting"}
-                </a>
-              </Popover.Trigger>
-              <Popover.Portal>
-                <Popover.Content className="rounded-full bg-white p-4 shadow-lg ring-1 ring-gray-100">
-                  <input
-                    value={author}
-                    onChange={handleAuthorChange}
-                    className="outline-none"
-                  ></input>
-                  <Popover.Close />
-                  <Popover.Arrow className="fill-white" />
-                </Popover.Content>
-              </Popover.Portal>
-            </Popover.Root>
-          </small>
         </div>
         {/* End Input */}
       </div>

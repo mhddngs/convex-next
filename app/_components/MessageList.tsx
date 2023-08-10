@@ -2,11 +2,19 @@
 
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 
-export default function MessageList({ messages, author }) {
+type Messages = Doc<"messages">;
+
+type MessageListProps = {
+  messages: Messages[] | undefined;
+  author: string;
+};
+
+export default function MessageList({ messages, author }: MessageListProps) {
   const classes = {
-    self: "p-2 px-4 text-white bg-blue-600 rounded-full rounded-br-none",
-    opponent: "p-2 px-4 text-gray-800 bg-gray-200 rounded-full rounded-bl-none",
+    self: "p-2 px-4 text-white bg-gradient-to-b from-cyan-500 to-blue-500 rounded-3xl rounded-br-none",
+    opponent: "p-2 px-4 text-gray-800 bg-gray-200 rounded-3xl rounded-bl-none",
   };
   return (
     <>
@@ -16,7 +24,7 @@ export default function MessageList({ messages, author }) {
           <div key={message._id} className="mt-auto flex flex-col">
             <div
               className={`flex flex-col ${
-                isSelf ? "mr-4 self-end" : "ml-4 self-start"
+                isSelf ? "ml-4 mr-4 self-end" : "ml-4 mr-4 self-start"
               }`}
             >
               <div className={isSelf ? classes.self : classes.opponent}>
